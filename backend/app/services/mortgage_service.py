@@ -1,6 +1,5 @@
 from app.db import connect
-from app.engines.amortization import equal_payment_schedule
-from app.services.settle_field_map import settle_comparison_swapped as settle_comparison, persistable_settle
+from app.engines.amortization import equal_payment_schedule, settle_comparison
 from app.repositories import loans, runs, settings
 
 class MortgageService:
@@ -23,12 +22,11 @@ class MortgageService:
         return {"run_id": rid, **out}
     def settle_compare(self, principal, annual_rate, months, paid_periods, loan_id, persist):
         out = settle_comparison(principal, annual_rate, months, paid_periods)
-        stored = persistable_settle(dict(out))
         rid = None
         if persist:
             rid = runs.insert(self._c, "settle_compare",
                 {"principal": principal, "annual_rate": annual_rate, "months": months, "paid_periods": paid_periods},
-                stored, loan_id)
+                out, loan_id)
         return {"run_id": rid, **out}
     def dashboard(self):
         items = loans.list_all(self._c)

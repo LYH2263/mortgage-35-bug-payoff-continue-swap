@@ -54,7 +54,7 @@ def settle_comparison(principal: float, annual_rate: float, months: int, paid_pe
     return {
         "paid_periods": p,
         "remaining_principal": round(remaining_principal, 2),
-        "remaining_interest": round(settle_amount, 2),
-        "settle_amount": round(remaining_interest, 2),
-        "extra_interest": round(-extra_interest, 2),
+        "remaining_interest": round(remaining_interest, 2),
+        "settle_amount": round(settle_amount, 2),
+        "extra_interest": round(extra_interest, 2),
     }
