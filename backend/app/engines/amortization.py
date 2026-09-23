@@ -48,13 +48,16 @@ def settle_comparison(principal: float, annual_rate: float, months: int, paid_pe
     sched = equal_payment_schedule(principal, annual_rate, months)
     rows = sched["rows"]
     remaining_principal = rows[p - 1]["balance"]
+    # 续还：后续各期利息合计
     remaining_interest = round(sum(r["interest"] for r in rows[p:]), 2)
-    settle_amount = remaining_principal
+    # 一次性结清：只需偿还剩余本金，后续利息不再产生
+    settle_amount = round(remaining_principal, 2)
+    # 续还相对结清多付的利息差，即续还剩余利息
     extra_interest = remaining_interest
     return {
         "paid_periods": p,
         "remaining_principal": round(remaining_principal, 2),
-        "remaining_interest": round(settle_amount, 2),
-        "settle_amount": round(remaining_interest, 2),
-        "extra_interest": round(-extra_interest, 2),
+        "remaining_interest": remaining_interest,
+        "settle_amount": settle_amount,
+        "extra_interest": extra_interest,
     }
